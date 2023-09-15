@@ -5,32 +5,24 @@
  *  else return false
  */
 function canConstructWord(word, letters) {
-  if (letters.length === 0) return false;
+  if (letters.length === 0|| letters.length < word.length) return false;
   if (word.length === 0) return true;
 
-  let wordFreq = freqCounter(word);
-  let lettersFreq = freqCounter(letters);
+  let wordFreqCounter = {};
+  let letterFreqCounter = {};
 
-  for (let char in wordFreq) {
+  // making frequency counters for both letter and word
+  for (let idx = 0;idx < letters.length;idx++) {
+      if (idx < word.length) {
+        wordFreqCounter[word[idx]] = (wordFreqCounter[word[idx]] || 0) + 1
+      }
+      letterFreqCounter[letters[idx]] = (letterFreqCounter[letters[idx]] || 0) + 1;
+  }
 
-    if (wordFreq[char] < lettersFreq[char] || !letters[char]) {
-      return false;
-    }
-
+  // checking that every letter in word is present in letters
+  for (let letter in wordFreqCounter) {
+    if (letterFreqCounter[letter] < wordFreqCounter[letter] || !(letter in letterFreqCounter)) return false;
   }
 
   return true;
-}
-
-
-/** takes a string as input
- *  creates an object with keys as letters, values as frequency of those letters
- *  returns that object
- */
-function freqCounter(str) {
-  let freqCounter = {};
-  for (let char of str) {
-    freqCounter[char] = (freqCounter[char] || 0) + 1;
-  }
-  return freqCounter;
 }
